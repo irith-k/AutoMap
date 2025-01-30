@@ -11,6 +11,14 @@ This tool creates structured mind maps based on user input topics by leveraging 
 - LMStudio running locally with:
   - llama-3.2-3b-instruct model loaded
   - Server active at `http://localhost:1234`
+ 
+  **Setup**:  
+1. Install LM Studio → [lmstudio.ai](https://lmstudio.ai)  
+2. Download `llama-3.2-3b-instruct` via HuggingFace  
+3. In LM Studio:  
+   - Load model  
+   - Go to **Server** tab → Start (port 1234)  
+
 
 ## Components
 
