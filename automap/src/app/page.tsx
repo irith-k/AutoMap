@@ -1,16 +1,21 @@
-import Image from "next/image";
-// import { Button } from "@/components/ui/button"
-// import { Textarea } from "@/components/ui/textarea"
-// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-// import { Toaster } from "@/components/ui/sonner"
+'use client'
+
+import React, { useRef } from "react";
+
+import Header from "@/components/header"
+import MindMap from "@/components/mind-map"
 
 export default function Home() {
+  const mindMapRef = useRef<HTMLDivElement>(null);
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+    <div>
+      <Header mindMapRef={mindMapRef}></Header>
+      <main>
+        <div style={{ width: 'auto', height: '86vh', margin: '25px', padding: '10px', borderStyle: 'solid', borderColor: '#ccc', borderWidth: '1px'}}>
+          <MindMap ref={mindMapRef}></MindMap>
+        </div>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-      </footer>
     </div>
   );
 }
