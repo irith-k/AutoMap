@@ -4,11 +4,11 @@
 This project allows users to generate and visualize mind maps based on a given topic using React Flow and an AI-powered backend.
 
 ## Project Structure
-The project is contained within the `mind-map-app` folder, which includes both the frontend and backend code.
+The project is contained within the `SimpleReactFlowExample` folder, which includes both the frontend and backend code.
 
 ### File Structure:
-- `mind-map-app/app/page.js`: Frontend code (React Flow visualization)
-- `mind-map-app/server.js`: Backend code (API to generate mind map data)
+- `/app/page.js`: Frontend code (React Flow visualization)
+- `/server.js`: Backend code (API to generate mind map data)
 
 ## Installation
 
