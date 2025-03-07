@@ -14,6 +14,7 @@
     "@radix-ui/react-slot": "^1.1.2",
     "@xyflow/react": "^12.4.3",
     "ai": "^4.1.38",
+    "antd": "^5.24.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "html2canvas": "^1.4.1",

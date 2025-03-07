@@ -1,6 +1,7 @@
 "use client";
 
-import React, { forwardRef, useCallback } from "react";
+import React, { forwardRef, useCallback, useState } from "react";
+import { FloatButton } from "antd";
 import {
     ReactFlow,
     Background, 
@@ -9,10 +10,12 @@ import {
     MiniMap,
     useNodesState,
     useEdgesState,
+    applyNodeChanges,
     addEdge,
     getIncomers,
     getOutgoers,
     getConnectedEdges,
+    ControlButton,
   } from '@xyflow/react';  
 import {  } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
@@ -28,13 +31,21 @@ const initialEdges = [
 ];
 
 const MindMap = forwardRef<HTMLDivElement>((_, ref) => {
-    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+    const [nodes, setNodes] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-    
+    const [editingNodeId, setEditingNodeId] = useState(null);
+    const [editText, setEditText] = useState("");
+
     const onConnect = useCallback(
-        (params: any) => setEdges((eds) => addEdge(params, eds)),
+        (params: any) => {
+          if (params.source !== params.target) setEdges((eds) => addEdge(params, eds));
+        },
         [setEdges],
     );
+
+    const onNodesChange = useCallback((changes: any) => {
+      setNodes((nodes) => applyNodeChanges(changes, nodes));
+    }, []);
     
     const onNodesDelete = useCallback(
         (deleted: any[]) => {
@@ -63,20 +74,53 @@ const MindMap = forwardRef<HTMLDivElement>((_, ref) => {
         [nodes, edges],
     );
 
+    const onNodeDoubleClick = useCallback((event: any, node: any) => {
+      setEditingNodeId(node.id);
+      setEditText(node.data.label);
+    }, []);
+  
+    const onChange = (event: any) => {
+      setEditText(event.target.value);
+    };
+
+    const onBlur = () => {
+      setNodes((nodes) =>
+        nodes.map((node) =>
+          node.id === editingNodeId ? { ...node, data: { ...node.data, label: editText } } : node
+        )
+      );
+      setEditingNodeId(null);
+    };
+
     return (
         <div style={{ width: '100%', height: '100%'}}>
             <ReactFlow 
                 ref={ref}
-                nodes={nodes}
+                nodes={nodes.map((node) => ({
+                  ...node,
+                  data: {
+                    ...node.data,
+                    label: editingNodeId === node.id ? (<input
+                      type="text"
+                      value={editText}
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      autoFocus
+                    />) : (node.data.label),
+                  },
+                }))}
                 edges={edges}
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
                 onNodesDelete={onNodesDelete}
+                onNodeDoubleClick={onNodeDoubleClick}
+                zoomOnDoubleClick={false}
                 proOptions={{hideAttribution: true}}
             >
-                <Controls />
-                <MiniMap />
+                <Controls orientation='horizontal' showInteractive={false} position='bottom-center'>
+                </Controls>
+                <MiniMap position="top-right" />
                 <Background color='#ccc' variant={BackgroundVariant.Dots} gap={12} size={1} />
             </ReactFlow>
         </div>
