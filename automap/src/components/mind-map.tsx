@@ -1,13 +1,14 @@
 "use client";
 
-import React, { forwardRef, useCallback, useState } from "react";
-import { FloatButton } from "antd";
+import React, { useCallback, useState, useEffect } from "react";
+import MindMapNode from './mind-map-node';
 import {
     ReactFlow,
     Background, 
     BackgroundVariant,
     Controls,
     MiniMap,
+    useReactFlow,
     useNodesState,
     useEdgesState,
     applyNodeChanges,
@@ -15,32 +16,68 @@ import {
     getIncomers,
     getOutgoers,
     getConnectedEdges,
-    ControlButton,
-  } from '@xyflow/react';  
-import {  } from '@xyflow/react';
+  } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
+const nodeTypes = {
+  mindMapNode: MindMapNode,
+};
+
+let id = 1;
+const getId = () => `${id++}`;
+
 const initialNodes = [
-    { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
-    { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
-    { id: '3', position: { x: 0, y: 200 }, data: { label: '3' } },
+    { id: getId(), type: 'mindMapNode', position: { x: 0, y: 0 }, data: { label: 'Node 1' } },
+    { id: getId(), type: 'mindMapNode', position: { x: 0, y: 100 }, data: { label: 'Node 2' } },
+    { id: getId(), type: 'mindMapNode', position: { x: 0, y: 200 }, data: { label: 'Node 3' } },
 ];
 const initialEdges = [
     { id: 'e1-2', source: '1', target: '2' },
     { id: 'e2-3', source: '2', target: '3' },
 ];
 
-const MindMap = forwardRef<HTMLDivElement>((_, ref) => {
+const MindMap = () => {
     const [nodes, setNodes] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-    const [editingNodeId, setEditingNodeId] = useState(null);
-    const [editText, setEditText] = useState("");
+    const { screenToFlowPosition } = useReactFlow();
 
     const onConnect = useCallback(
         (params: any) => {
-          if (params.source !== params.target) setEdges((eds) => addEdge(params, eds));
+          if(params.source !== params.target) {
+            if(!edges.some((edge) =>
+                (edge.source === params.source && edge.target === params.target) ||
+                (edge.source === params.target && edge.target === params.source)
+            )) {      
+              setEdges((eds) => addEdge(params, eds));
+            }
+          }
         },
         [setEdges],
+    );
+
+    const onConnectEnd = useCallback(
+      (event: any, connectionState: any) => {
+        if (!connectionState.isValid) {
+          const newId = getId();
+          const { clientX, clientY } =
+            'changedTouches' in event ? event.changedTouches[0] : event;
+          const newNode = {
+            id: newId,
+            type: 'mindMapNode',
+            position: {
+              x: clientX,
+              y: clientY,
+            },
+            data: { label: `Node ${newId}` }
+          };
+   
+          setNodes((nodes) => nodes.concat(newNode));
+          setEdges((edges) =>
+            edges.concat({ id: `e${connectionState.fromNode.id}-${newId}`, source: connectionState.fromNode.id, target: newId }),
+          );
+        }
+      },
+      [screenToFlowPosition],
     );
 
     const onNodesChange = useCallback((changes: any) => {
@@ -73,58 +110,27 @@ const MindMap = forwardRef<HTMLDivElement>((_, ref) => {
         },
         [nodes, edges],
     );
-
-    const onNodeDoubleClick = useCallback((event: any, node: any) => {
-      setEditingNodeId(node.id);
-      setEditText(node.data.label);
-    }, []);
   
-    const onChange = (event: any) => {
-      setEditText(event.target.value);
-    };
-
-    const onBlur = () => {
-      setNodes((nodes) =>
-        nodes.map((node) =>
-          node.id === editingNodeId ? { ...node, data: { ...node.data, label: editText } } : node
-        )
-      );
-      setEditingNodeId(null);
-    };
-
     return (
         <div style={{ width: '100%', height: '100%'}}>
             <ReactFlow 
-                ref={ref}
-                nodes={nodes.map((node) => ({
-                  ...node,
-                  data: {
-                    ...node.data,
-                    label: editingNodeId === node.id ? (<input
-                      type="text"
-                      value={editText}
-                      onChange={onChange}
-                      onBlur={onBlur}
-                      autoFocus
-                    />) : (node.data.label),
-                  },
-                }))}
+                nodeTypes={nodeTypes}
+                nodes={nodes}
                 edges={edges}
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
+                onConnectEnd={onConnectEnd}
                 onNodesDelete={onNodesDelete}
-                onNodeDoubleClick={onNodeDoubleClick}
                 zoomOnDoubleClick={false}
                 proOptions={{hideAttribution: true}}
             >
-                <Controls orientation='horizontal' showInteractive={false} position='bottom-center'>
-                </Controls>
-                <MiniMap position="top-right" />
+                <Controls orientation='horizontal' showInteractive={false} position='bottom-center' />
+                <MiniMap position="bottom-left" />
                 <Background color='#ccc' variant={BackgroundVariant.Dots} gap={12} size={1} />
             </ReactFlow>
         </div>
     );
-});
+};
 
 export default MindMap;
