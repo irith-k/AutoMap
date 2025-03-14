@@ -13,6 +13,7 @@ import {
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu" 
 import domtoimage from "dom-to-image";
+import jsPDF from 'jspdf';
 
 const SaveButton = () => {
     const saveAsPng = async () => {
@@ -28,15 +29,17 @@ const SaveButton = () => {
 
     };
 
-    const saveAsJpeg = async () => {
+    const saveAsPdf = async () => {
         const element = document.querySelector(".react-flow__viewport");
         if(!element) return;
-        domtoimage.toJpeg(element)
+        domtoimage.toPng(element)
         .then((dataUrl: string) => {
-            const link = document.createElement("a");
-            link.href = dataUrl;
-            link.download = "mindmap.jpeg";
-            link.click();
+            const pdf = new jsPDF({
+                orientation: 'landscape',
+                format: [element.clientWidth, element.clientHeight]
+            });
+            pdf.addImage(dataUrl, 'PNG', 0, 0, element.clientWidth, element.clientHeight);
+            pdf.save("mindmap.pdf");
         });
 
     };
@@ -46,7 +49,7 @@ const SaveButton = () => {
             <DropdownMenuTrigger className="bg-black hover:bg-blue-600 text-white transition-all h-9 px-4 py-2 m-1 rounded-md text-sm font-medium outline-none shadow-none ">Save</DropdownMenuTrigger>
             <DropdownMenuContent>
                 <DropdownMenuItem onClick={saveAsPng}>Save as PNG</DropdownMenuItem>
-                <DropdownMenuItem onClick={saveAsJpeg}>Save as JPEG</DropdownMenuItem>
+                <DropdownMenuItem onClick={saveAsPdf}>Save as PDF</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     );
