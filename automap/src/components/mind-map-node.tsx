@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useLayoutEffect, useRef } from 'react';
 import { Handle, Position, NodeProps, useReactFlow } from '@xyflow/react';
 
 interface MindMapNodeProps extends NodeProps {
@@ -30,47 +30,50 @@ const MindMapNode: React.FC<MindMapNodeProps> = ({ id, data, selected }) => {
   };
 
   return (
-    <div
-      className={`bg-white border transition-all ${selected ? "border-black" : "border-gray-300 hover:border-gray-400"} shadow-none rounded-md px-4 py-2 text-center cursor-pointer`}
-      onDoubleClick={handleDoubleClick}
-    >
+    <div className={`bg-white border relative transition-all ${selected ? "border-black" : "border-gray-300 hover:border-gray-400"} shadow-none rounded-md text-center`} onDoubleClick={handleDoubleClick}>
+      <div
+        className={`flex relative pr-3 py-2 h-10 text-center`}
+      >
+        <div className="cursor-grab left-px z-10 active:cursor-grabbing">
+          <object data="drag-handle.svg" className="w-8 h-full pointer-events-none"/>
+        </div>
+        {isEditing ? (
+          <input
+            ref={inputRef}
+            type="text"
+            className="border-none outline-none w-full text-center"
+            value={label}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            autoFocus
+          />
+        ) : (
+          <span className="text-center">{label}</span>
+        )}
+      </div>
       <Handle 
         type="target" 
-        position={Position.Right}
+        position={Position.Top}
         style={{
           top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
+          height: '100%',
+          width: '100%',
           opacity: 0,
-          width: "10px",
-          height: "10px",
-          background: "transparent",
+          pointerEvents: "none"
         }}
       />
-      {isEditing ? (
-        <input
-          ref={inputRef}
-          type="text"
-          className="border-none outline-none w-full text-center"
-          value={label}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          autoFocus
-        />
-      ) : (
-        <span className="text-center">{label}</span>
-      )}
       <Handle 
         type="source" 
-        position={Position.Left}
+        position={Position.Top}
         style={{
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          opacity: 0,
-          width: "10px",
-          height: "10px",
-          background: "transparent",
+          top: 0,
+          left: 0,
+          transform: 'none',
+          background: 'transparent',
+          height: '100%',
+          width: '100%',
+          borderRadius: '4px',
+          border: 'none',
         }}
       />
     </div>

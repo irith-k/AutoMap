@@ -8,14 +8,14 @@ import MindMap from "@/components/mind-map"
 export default function Home() {
   return (
     <div>
-      <ReactFlowProvider>
-        <Header></Header>
-        <main>
-            <div style={{ width: 'auto', height: '86vh', margin: '25px', borderStyle: 'solid', borderColor: '#ccc', borderWidth: '1px'}}>
+      <main>
+        <ReactFlowProvider>
+          <Header></Header>
+            <div style={{ width: 'auto', height: '91vh'}}>
               <MindMap></MindMap>
             </div>
-        </main>
-      </ReactFlowProvider>
+        </ReactFlowProvider>
+      </main>
     </div>
   );
 }

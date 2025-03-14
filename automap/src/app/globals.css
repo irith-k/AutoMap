@@ -70,3 +70,7 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.react-flow .react-flow__connectionline {
+  z-index: 0;
+}

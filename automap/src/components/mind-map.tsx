@@ -1,9 +1,13 @@
 "use client";
 
-import React, { useCallback, useState, useEffect } from "react";
+import ELK from 'elkjs/lib/elk.bundled.js';
+import React, { useCallback } from "react";
 import MindMapNode from './mind-map-node';
+import { Button } from "@/components/ui/button";
 import {
     ReactFlow,
+    Node,
+    Edge,
     Background, 
     BackgroundVariant,
     Controls,
@@ -16,8 +20,12 @@ import {
     getIncomers,
     getOutgoers,
     getConnectedEdges,
+    ConnectionLineType,
+    SelectionMode,
   } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+
+const elk = new ELK(); // TODO: layout algorithm
 
 const nodeTypes = {
   mindMapNode: MindMapNode,
@@ -36,6 +44,11 @@ const initialEdges = [
     { id: 'e2-3', source: '2', target: '3' },
 ];
 
+const defaultEdgeOptions = {
+  type: 'straight',
+  elevateEdgesOnSelect: true,
+};
+
 const MindMap = () => {
     const [nodes, setNodes] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -44,41 +57,40 @@ const MindMap = () => {
     const onConnect = useCallback(
         (params: any) => {
           if(params.source !== params.target) {
-            if(!edges.some((edge) =>
-                (edge.source === params.source && edge.target === params.target) ||
-                (edge.source === params.target && edge.target === params.source)
-            )) {      
+            // if(!edges.some((edge) =>
+            //     (edge.source === params.target && edge.target === params.source)
+            // )) {      
               setEdges((eds) => addEdge(params, eds));
-            }
+            // }
           }
         },
         [setEdges],
     );
 
-    const onConnectEnd = useCallback(
-      (event: any, connectionState: any) => {
-        if (!connectionState.isValid) {
-          const newId = getId();
-          const { clientX, clientY } =
-            'changedTouches' in event ? event.changedTouches[0] : event;
-          const newNode = {
-            id: newId,
-            type: 'mindMapNode',
-            position: {
-              x: clientX,
-              y: clientY,
-            },
-            data: { label: `Node ${newId}` }
-          };
+    // const onConnectEnd = useCallback(
+    //   (event: any, connectionState: any) => {
+    //     if (!connectionState.isValid) {
+    //       const newId = getId();
+    //       const { clientX, clientY } =
+    //         'changedTouches' in event ? event.changedTouches[0] : event;
+    //       const newNode = {
+    //         id: newId,
+    //         type: 'mindMapNode',
+    //         position: {
+    //           x: clientX,
+    //           y: clientY,
+    //         },
+    //         data: { label: `Node ${newId}` }
+    //       };
    
-          setNodes((nodes) => nodes.concat(newNode));
-          setEdges((edges) =>
-            edges.concat({ id: `e${connectionState.fromNode.id}-${newId}`, source: connectionState.fromNode.id, target: newId }),
-          );
-        }
-      },
-      [screenToFlowPosition],
-    );
+    //       setNodes((nodes) => nodes.concat(newNode));
+    //       setEdges((edges) =>
+    //         edges.concat({ id: `e${connectionState.fromNode.id}-${newId}`, source: connectionState.fromNode.id, target: newId, }),
+    //       );
+    //     }
+    //   },
+    //   [screenToFlowPosition],
+    // );
 
     const onNodesChange = useCallback((changes: any) => {
       setNodes((nodes) => applyNodeChanges(changes, nodes));
@@ -117,15 +129,20 @@ const MindMap = () => {
                 nodeTypes={nodeTypes}
                 nodes={nodes}
                 edges={edges}
+                defaultEdgeOptions={defaultEdgeOptions}
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
-                onConnectEnd={onConnectEnd}
+                //onConnectEnd={onConnectEnd}
                 onNodesDelete={onNodesDelete}
+                selectionMode={SelectionMode.Partial}
+                selectNodesOnDrag={false}
                 zoomOnDoubleClick={false}
+                connectionLineType={ConnectionLineType.Straight}
                 proOptions={{hideAttribution: true}}
+                fitView
             >
-                <Controls orientation='horizontal' showInteractive={false} position='bottom-center' />
+                <Controls orientation='horizontal' showFitView={false} showInteractive={false} position='bottom-center' />
                 <MiniMap position="bottom-left" />
                 <Background color='#ccc' variant={BackgroundVariant.Dots} gap={12} size={1} />
             </ReactFlow>
