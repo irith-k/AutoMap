@@ -1,6 +1,5 @@
 "use client";
 
-import ELK from 'elkjs/lib/elk.bundled.js';
 import React, { useCallback } from "react";
 import MindMapNode from './mind-map-node';
 import { Button } from "@/components/ui/button";
@@ -24,8 +23,6 @@ import {
     SelectionMode,
   } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-
-const elk = new ELK(); // TODO: layout algorithm
 
 const nodeTypes = {
   mindMapNode: MindMapNode,
