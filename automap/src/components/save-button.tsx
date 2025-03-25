@@ -1,3 +1,4 @@
+import { Download } from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -46,7 +47,9 @@ const SaveButton = () => {
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger className="bg-black hover:bg-blue-600 text-white transition-all h-9 px-4 py-2 m-1 rounded-md text-sm font-medium outline-none shadow-none ">Save</DropdownMenuTrigger>
+            <DropdownMenuTrigger className="bg-black hover:bg-blue-600 text-white transition-all h-9 px-4 py-2 m-1 rounded-md text-sm font-medium outline-none shadow-none ">
+                <Download size={15} />
+            </DropdownMenuTrigger>
             <DropdownMenuContent>
                 <DropdownMenuItem onClick={saveAsPng}>Save as PNG</DropdownMenuItem>
                 <DropdownMenuItem onClick={saveAsPdf}>Save as PDF</DropdownMenuItem>

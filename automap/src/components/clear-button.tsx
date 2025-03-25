@@ -1,4 +1,5 @@
 import React from "react";
+import { Trash2 } from "lucide-react";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -23,7 +24,9 @@ const ClearButton = () => {
 
     return (
         <AlertDialog>
-            <AlertDialogTrigger className="bg-black hover:bg-blue-600 transition-all h-9 px-4 py-2 m-1 text-white rounded-md text-sm font-medium outline-none shadow-none">Clear</AlertDialogTrigger>
+            <AlertDialogTrigger className="bg-black hover:bg-blue-600 transition-all h-9 px-4 py-2 m-1 text-white rounded-md text-sm font-medium outline-none shadow-none">
+                <Trash2 size={15}/>
+            </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
@@ -33,7 +36,7 @@ const ClearButton = () => {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={clear}>Continue</AlertDialogAction>
+                <AlertDialogAction className="bg-black hover:bg-blue-600 text-white transition-all" onClick={clear}>Continue</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

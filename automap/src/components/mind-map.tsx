@@ -2,14 +2,10 @@
 
 import React, { useCallback } from "react";
 import MindMapNode from './mind-map-node';
-import { Button } from "@/components/ui/button";
 import {
     ReactFlow,
-    Node,
-    Edge,
     Background, 
     BackgroundVariant,
-    Controls,
     MiniMap,
     useReactFlow,
     useNodesState,
@@ -64,31 +60,6 @@ const MindMap = () => {
         [setEdges],
     );
 
-    // const onConnectEnd = useCallback(
-    //   (event: any, connectionState: any) => {
-    //     if (!connectionState.isValid) {
-    //       const newId = getId();
-    //       const { clientX, clientY } =
-    //         'changedTouches' in event ? event.changedTouches[0] : event;
-    //       const newNode = {
-    //         id: newId,
-    //         type: 'mindMapNode',
-    //         position: {
-    //           x: clientX,
-    //           y: clientY,
-    //         },
-    //         data: { label: `Node ${newId}` }
-    //       };
-   
-    //       setNodes((nodes) => nodes.concat(newNode));
-    //       setEdges((edges) =>
-    //         edges.concat({ id: `e${connectionState.fromNode.id}-${newId}`, source: connectionState.fromNode.id, target: newId, }),
-    //       );
-    //     }
-    //   },
-    //   [screenToFlowPosition],
-    // );
-
     const onNodesChange = useCallback((changes: any) => {
       setNodes((nodes) => applyNodeChanges(changes, nodes));
     }, []);
@@ -130,7 +101,6 @@ const MindMap = () => {
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
-                //onConnectEnd={onConnectEnd}
                 onNodesDelete={onNodesDelete}
                 selectionMode={SelectionMode.Partial}
                 selectNodesOnDrag={false}
@@ -139,7 +109,6 @@ const MindMap = () => {
                 proOptions={{hideAttribution: true}}
                 fitView
             >
-                <Controls orientation='horizontal' showFitView={false} showInteractive={false} position='bottom-center' />
                 <MiniMap position="bottom-left" />
                 <Background color='#ccc' variant={BackgroundVariant.Dots} gap={12} size={1} />
             </ReactFlow>
