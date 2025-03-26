@@ -105,7 +105,7 @@ export default function ChatSupport() {
       <ExpandableChatFooter>
         <form ref={formRef} className="flex relative gap-2" onSubmit={handleSubmit}>
           <ChatInput value={input} onChange={handleInputChange} onKeyDown={onKeyDown} className="min-h-12 bg-background shadow-none "/>
-          <Button type="submit" size="icon" disabled={isLoading || isGenerating || !input}>
+          <Button type="submit" size="icon" className="bg-black hover:bg-blue-600" disabled={isLoading || isGenerating || !input}>
             <Send className="size-4" />
           </Button>
         </form>

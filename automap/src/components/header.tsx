@@ -10,7 +10,7 @@ import HelpButton from './ui/help-button';
 
 const Header = () => {
     return (
-        <header className="bg-blue-200 text-black py-3 px-3 flex justify-between items-center">
+        <header className="bg-gray-100 text-black py-3 px-3 flex justify-between items-center">
             <div className="absolute left-1/2 transform -translate-x-1/2 cursor-default">
                 <h1 className="text-2xl font-bold">AutoMap</h1>
             </div>

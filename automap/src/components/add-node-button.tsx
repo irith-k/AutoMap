@@ -57,8 +57,9 @@ const AddNodeButton = () => {
                 )
             );
             setNewNodePosition(null);
-            setNewNodeLabel("");
+            setOpenDialog(false);
         }
+        setNewNodeLabel("");
     };
 
     return (
@@ -83,16 +84,13 @@ const AddNodeButton = () => {
                                 if (e.key === "Enter") {
                                     e.preventDefault();
                                     addNewNode();
-                                    setOpenDialog(false);
                                 }
                             }}
                         />
                     </div>
                 </div>
                 <DialogFooter>
-                    <DialogClose asChild>
-                        <Button type="submit" onClick={addNewNode} className="bg-black hover:bg-blue-600 transition-all text-white">Add node</Button>
-                    </DialogClose>
+                    <Button type="submit" onClick={addNewNode} disabled={!newNodeLabel.trim()} className="bg-black hover:bg-blue-600 transition-all text-white">Add node</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
