@@ -10,15 +10,19 @@ import HelpButton from './ui/help-button';
 
 const Header = () => {
     return (
-        <header className="bg-blue-200 text-black py-3 px-6 flex justify-between items-center">
-            <div className="flex-1 text-center text-2xl font-bold cursor-default">AutoMap</div>
-            <ZoomInButton></ZoomInButton>
-            <ZoomOutButton></ZoomOutButton>
-            <FitButton></FitButton>
-            <AddNodeButton></AddNodeButton>
-            <SaveButton></SaveButton>
-            <ClearButton></ClearButton>
-            <HelpButton></HelpButton>
+        <header className="bg-blue-200 text-black py-3 px-3 flex justify-between items-center">
+            <div className="absolute left-1/2 transform -translate-x-1/2 cursor-default">
+                <h1 className="text-2xl font-bold">AutoMap</h1>
+            </div>
+            <div className='ml-auto flex'>
+                <ZoomInButton></ZoomInButton>
+                <ZoomOutButton></ZoomOutButton>
+                <FitButton></FitButton>
+                <AddNodeButton></AddNodeButton>
+                <SaveButton></SaveButton>
+                <ClearButton></ClearButton>
+                <HelpButton></HelpButton>
+            </div>
         </header>
     );
 }
