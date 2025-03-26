@@ -2,6 +2,8 @@
 
 import React, { useCallback } from "react";
 import MindMapNode from './mind-map-node';
+import { useNewNodeStore } from './store'
+
 import {
     ReactFlow,
     Background, 
@@ -17,7 +19,7 @@ import {
     getConnectedEdges,
     ConnectionLineType,
     SelectionMode,
-  } from '@xyflow/react';
+} from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
 const nodeTypes = {
@@ -90,6 +92,18 @@ const MindMap = () => {
         },
         [nodes, edges],
     );
+
+    const setOpenDialog = useNewNodeStore((state) => state.setOpenDialog);
+    const setNewNodePosition = useNewNodeStore((state) => state.setNewNodePosition);
+
+    const onDoubleClick = useCallback((event: any) => {
+      const { clientX, clientY } = event;
+      if (!event.target.closest('.react-flow__node')) {
+        const position = screenToFlowPosition({ x: clientX, y: clientY });
+        setNewNodePosition(position);
+        setOpenDialog(true);
+      }
+    }, [screenToFlowPosition]);
   
     return (
         <div style={{ width: '100%', height: '100%'}}>
@@ -98,10 +112,12 @@ const MindMap = () => {
                 nodes={nodes}
                 edges={edges}
                 defaultEdgeOptions={defaultEdgeOptions}
+                nodeOrigin={[0.5, 0.5]}
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
                 onNodesDelete={onNodesDelete}
+                onDoubleClick={onDoubleClick}
                 selectionMode={SelectionMode.Partial}
                 selectNodesOnDrag={false}
                 zoomOnDoubleClick={false}
