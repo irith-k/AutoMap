@@ -19,9 +19,7 @@ const SaveButton = () => {
             link.download = "mindmap.png";
             link.click();
         });
-
     };
-
     const saveAsPdf = async () => {
         const element = document.querySelector(".react-flow__viewport");
         if(!element) return;
@@ -34,7 +32,6 @@ const SaveButton = () => {
             pdf.addImage(dataUrl, 'PNG', 0, 0, element.clientWidth, element.clientHeight);
             pdf.save("mindmap.pdf");
         });
-
     };
 
     return (

@@ -13,18 +13,36 @@ import {
 import { Input } from "@/components/ui/input";
 import {
     useReactFlow,
+    useStoreApi,
 } from '@xyflow/react';
 
 const AddNodeButton = () => {
 
     const [nodeLabel, setNodeLabel] = useState("");
-    const { getNodes, addNodes } = useReactFlow();
+    const { setNodes, getNodes, addNodes, screenToFlowPosition } = useReactFlow();
+    const store = useStoreApi();
 
     const addNewNode = () => {
-        const id = Number(getNodes().at(-1)?.id)+1;
-        if (nodeLabel.trim()) {
-            const newNode = { id: `${id}`, type: 'mindMapNode', position: { x: 0, y: 0 }, data: { label: nodeLabel } };
-            addNodes([newNode]);
+        var id = 1;
+        if(getNodes().length > 0) {
+            id = Number(getNodes().at(-1)?.id)+1;
+        }
+        if(nodeLabel.trim()) {
+            const { domNode } = store.getState();
+            const boundingRect = domNode?.getBoundingClientRect();
+            if(boundingRect) {
+                const center = screenToFlowPosition({
+                    x: boundingRect.x + boundingRect.width/2,
+                    y: boundingRect.y + boundingRect.height/2,
+                });
+                const newNode = { id: `${id}`, type: 'mindMapNode', position: { x: center.x, y: center.y }, data: { label: nodeLabel } };
+                addNodes([newNode]);
+                setNodes((nodes) =>
+                    nodes.map((node) =>
+                        (node.id === `${id}` && node.measured && node.measured.width && node.measured.height) ? { ...node, position: { x: center.x - node.measured.width/2, y: center.y - node.measured.height/2 } } : node
+                    )
+                );
+            }
             setNodeLabel("");
         }
     };

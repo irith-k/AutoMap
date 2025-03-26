@@ -35,7 +35,7 @@ const MindMapNode: React.FC<MindMapNodeProps> = ({ id, data, selected }) => {
         className={`flex relative pr-3 py-2 h-10 text-center`}
       >
         <div className="cursor-grab left-px z-10 active:cursor-grabbing">
-          <object data="drag-handle.svg" className="w-8 h-full pointer-events-none"/>
+          <img src="drag-handle.png" className="w-full h-full pointer-events-none"></img>
         </div>
         {isEditing ? (
           <input
