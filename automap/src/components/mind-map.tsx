@@ -2,7 +2,7 @@
 
 import React, { useCallback } from "react";
 import MindMapNode from './mind-map-node';
-import { useNewNodeStore } from './store'
+import { useNewNodeStore } from './store';
 
 import {
     ReactFlow,

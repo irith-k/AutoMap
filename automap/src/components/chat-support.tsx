@@ -17,10 +17,12 @@ import {
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
 import { useChat } from '@ai-sdk/react';
 import { useEffect, useRef, useState } from "react";
+import { useReactFlow } from "@xyflow/react";
 
 export default function ChatSupport() {
+  const {setNodes, setEdges} = useReactFlow();
   const [isGenerating, setIsGenerating] = useState(false);
-  
+
   const {
     messages,
     setMessages,
@@ -54,6 +56,7 @@ export default function ChatSupport() {
     e.preventDefault();
     setIsGenerating(true);
     handleSubmit(e);
+    submitMindmapTopic();
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -62,6 +65,31 @@ export default function ChatSupport() {
       if (isGenerating || isLoading || !input) return;
       setIsGenerating(true);
       onSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
+    }
+  };
+
+  const submitMindmapTopic = async() => {
+    const topic = input;
+    if( topic.length === 0 ) return;
+
+    // log what topic it has received
+    console.log("mindmap topic: ", topic);
+    try{
+      const response = await fetch("http://localhost:3002/generate-mindmap", {
+          method: 'POST',
+          headers: {
+          "Content-Type": "application/json"
+          },
+          body: JSON.stringify({topic})
+      })
+  
+      const response_correct = await response.json();
+      if (response_correct.nodes && response_correct.edges){
+        setNodes(response_correct.nodes);
+        setEdges(response_correct.edges);
+      }
+    } catch (error) {
+      console.error("Error fetching mindmap data:", error);
     }
   };
 
@@ -105,7 +133,7 @@ export default function ChatSupport() {
       <ExpandableChatFooter>
         <form ref={formRef} className="flex relative gap-2" onSubmit={handleSubmit}>
           <ChatInput value={input} onChange={handleInputChange} onKeyDown={onKeyDown} className="min-h-12 bg-background shadow-none "/>
-          <Button type="submit" size="icon" className="bg-black hover:bg-blue-600" disabled={isLoading || isGenerating || !input}>
+          <Button type="submit" onClick={() => submitMindmapTopic()} size="icon" className="bg-black hover:bg-blue-600" disabled={isLoading || isGenerating || !input}>
             <Send className="size-4" />
           </Button>
         </form>
