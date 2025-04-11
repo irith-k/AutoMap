@@ -106,7 +106,7 @@ export default function ChatSupport() {
         // set nodes and edges and center mind map
         setNodes(response_correct.nodes);
         setEdges(response_correct.edges);
-        fitView({ padding: 0.2 });
+        setTimeout(() => fitView({ padding: 0.2 }), 0);
 
         setMessages((prev) => [
           ...prev,
