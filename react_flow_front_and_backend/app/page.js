@@ -1,18 +1,24 @@
 "use client";
-import React, { useState, useCallback } from "react";
+import React, { useCallback } from "react";
 import ReactFlow, {
   Background,
   Controls,
   MiniMap,
-  applyNodeChanges,
-  applyEdgeChanges,
+  useNodesState,
+  useEdgesState,
   addEdge,
 } from "reactflow";
 import "reactflow/dist/style.css";
 
 const MindMap = () => {
-  const [edges, setEdges] = useState([]);
-  const [nodes, setNodes] = useState([]);
+  const initialNodes = [
+    { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
+    { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
+  ];
+  const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
+
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
 
 
   async function submitMindmapTopic() {
@@ -36,10 +42,17 @@ const MindMap = () => {
 
   }
 
+   
+  const onConnect = useCallback(
+    (params) => setEdges((eds) => addEdge(params, eds)),
+    [setEdges],
+  );
+
+
   return(
     <div style={
-      {width: "1500px",
-      height:"1000px"}
+      {width: "80%",
+      height:"80vh"}
       }>
       <text>Hello! Please enter a mind map topic...</text>
       <input id={"mindmap_topic"} placeholder="Enter topic here"/>
@@ -47,9 +60,15 @@ const MindMap = () => {
       <ReactFlow
           nodes={nodes}
           edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
       fitView
       style={{ backgroundColor: "#F7F9FB" }}
       >
+        <Controls />
+        <MiniMap />
+        <Background variant="dots" gap={12} size={1} />
       </ReactFlow>
     </div>
   );
