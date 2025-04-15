@@ -26,46 +26,25 @@ app.post('/generate-mindmap', async (req, res) => {
   in-depth graphs for users.
   
   You will generate a JSON object for a detailed React Flow mind map with ample nodes on the topic: '${topic}'. 
-  Your goal is to create a mind map that will leave the user satisfied. Please make it insightful and detailed.
+  Your goal is to create a mind map that will leave the user satisfied.
 
-  Just return the JSON object, and no other text.
+  The completion must:
+  - Be EXTREMELY insightful and detailed, with at least 5 "subpoints" for the main topic,
+  - Have each subpoint containing at least 3 "sub-sub points". Thus, you should produce at least 16 nodes, one for the topic, which branches into five subtopics, and
+  each subtopic has 3 points.
+  - Have the subpoint nodes "branch" evenly around the center node, rather than just spreading in one direction. Also, each of the 3 "sub-sub points" should
+  be distributed evenly around each "subpoint". Please also ensure
+  - Ensure there is NO overlap in nodes themselves, and nodes that "branch" should ALWAYS be in close proximity to each other.
+  - Ensure that nodes in differing "subtopics" are FAR from each other.
+  - Ensure the overall "ReactFlow" diagram is HUGE, taking up AMPLE space.
+  - Return the JSON object, and no other text.
   The JSON should have two arrays, nodes and edges, where:
   * Each node has id, position {x, y}, and data {label}.
   * Each edge has id, source, and target.
   Your response must be EXACTLY in the following format:
 
-  Example Format:
-  {
-    nodes: [
-      { id: '1', position: { x: 250, y: 5 }, data: { label: 'NODE A' } },
-      { id: '2', position: { x: 450, y: 100 }, data: { label: 'NODE B' } },
-      { id: '3', position: { x: 650, y: 200 }, data: { label: 'NODE C' } }
-    ],
-    edges: [
-      { id: 'e1-2', source: '1', target: '2' },
-      { id: 'e2-3', source: '2', target: '3' }
-    ]
-  }`;
-
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-          { role: "system", content: "You are a helpful assistant." },
-          {
-              role: "user",
-              content: prompt,
-          },
-      ],
-      response_format: {"type":"json_object"}
-  });
-
-  const jsonData = JSON.parse(completion.choices[0].message.content);
-  console.log(jsonData);
-
-  /*
-  Hello! If you are testing this out and don't want to do API requests, here is an example API response:
-
-  {
+  Example Format of an IDEAL response:
+{
   nodes: [
     { id: '1', position: [Object], data: [Object] },
     { id: '2', position: [Object], data: [Object] },
@@ -78,7 +57,16 @@ app.post('/generate-mindmap', async (req, res) => {
     { id: '9', position: [Object], data: [Object] },
     { id: '10', position: [Object], data: [Object] },
     { id: '11', position: [Object], data: [Object] },
-    { id: '12', position: [Object], data: [Object] }
+    { id: '12', position: [Object], data: [Object] },
+    { id: '13', position: [Object], data: [Object] },
+    { id: '14', position: [Object], data: [Object] },
+    { id: '15', position: [Object], data: [Object] },
+    { id: '16', position: [Object], data: [Object] },
+    { id: '17', position: [Object], data: [Object] },
+    { id: '18', position: [Object], data: [Object] },
+    { id: '19', position: [Object], data: [Object] },
+    { id: '20', position: [Object], data: [Object] },
+    { id: '21', position: [Object], data: [Object] }
   ],
   edges: [
     { id: 'e1-2', source: '1', target: '2' },
@@ -86,18 +74,38 @@ app.post('/generate-mindmap', async (req, res) => {
     { id: 'e1-4', source: '1', target: '4' },
     { id: 'e1-5', source: '1', target: '5' },
     { id: 'e1-6', source: '1', target: '6' },
-    { id: 'e1-7', source: '1', target: '7' },
-    { id: 'e2-10', source: '2', target: '10' },
+    { id: 'e2-7', source: '2', target: '7' },
     { id: 'e2-8', source: '2', target: '8' },
-    { id: 'e3-9', source: '3', target: '9' },
-    { id: 'e4-6', source: '4', target: '6' },
-    { id: 'e5-11', source: '5', target: '11' },
-    { id: 'e5-12', source: '5', target: '12' }
+    { id: 'e2-9', source: '2', target: '9' },
+    { id: 'e3-10', source: '3', target: '10' },
+    { id: 'e3-11', source: '3', target: '11' },
+    { id: 'e3-12', source: '3', target: '12' },
+    { id: 'e4-13', source: '4', target: '13' },
+    { id: 'e4-14', source: '4', target: '14' },
+    { id: 'e4-15', source: '4', target: '15' },
+    { id: 'e5-16', source: '5', target: '16' },
+    { id: 'e5-17', source: '5', target: '17' },
+    { id: 'e5-18', source: '5', target: '18' },
+    { id: 'e6-19', source: '6', target: '19' },
+    { id: 'e6-20', source: '6', target: '20' },
+    { id: 'e6-21', source: '6', target: '21' }
   ]
-}
+}`;
 
-You can simple return the above ^^^ as a JSON and comment out the API calls above to openai. Thanks!
-  */
+    const completion = await openai.chat.completions.create({
+      model: "o3-mini",
+      messages: [
+          { role: "system", content: "You are a helpful assistant." },
+          {
+              role: "user",
+              content: prompt,
+          },
+      ],
+      response_format: {"type":"json_object"}
+  });
+
+  const jsonData = JSON.parse(completion.choices[0].message.content);
+  console.log(jsonData);
   res.json(jsonData);
 
 });
