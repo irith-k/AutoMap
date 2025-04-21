@@ -110,6 +110,102 @@ app.post('/generate-mindmap', async (req, res) => {
 
 });
 
+app.post('/update-mindmap', async (req, res) => {
+  const { need, nodes, edges, topic } = req.body;
+
+  if ( !need || !nodes || !edges || !topic ) {
+    return res.status(400).json({ error: 'Topic is required' });
+  }
+
+  // Update the prompt to include the topic dynamically
+  const prompt = `You are an expert in generating mind maps, specifically, taking certain topics and breaking them down into multiple subtopics to generate extremely detailed,
+  in-depth graphs for users.
+
+  You are given an already existing ReactFlow mind map about the topic: '${topic}' with the following nodes and edges:
+  - given nodes: ${JSON.stringify(nodes, null, 2)}
+  - given edges: ${JSON.stringify(edges, null, 2)}
+  
+  Your goal is to UPDATE the above ReactFlow nodes and edges based on the following user need/change, again still relating the diagram's content to the overall topic: '${topic}':
+  - need: '${need}'
+
+  The completion must:
+  - *** EXTREMELY IMPORTANT: RETURN THE COMPLETE REACT FLOW CODE, NOT JUST THE CHANGES REQUESTED. AS IN, RETURN THE "given nodes" and "given edges" and any associated changes (additions, deletions, etc.)
+  - Preserve all already existing nodes and edges exactly as-is (including their positions) IF they are unrelated to the change
+
+  - *** EXTREMELY IMPORTANT: KEEP THE 'position' OF ALL NODES IN THE OUTPUT(EXLUDING NEW CHANGES) THE SAME AS THE "given nodes" ABOVE ***
+
+  - If new nodes/subtopics are requested to be added by the user, have them branch "centrally" around the center node/topic: '${topic}'
+  - Make the minimal number of changes possible to the given nodes and edges
+  - If the user change involves REMOVAL, remove the associated "node(s)" and "edge(s)" from the above list
+  - If the user change involves ADDITION, add new "node(s)" and/or "edge(s)" to the above list, ensuring that their "positions" values are relevant to their related nodes.
+  - NOT MODIFY ANY OTHER PART OF THE EXISTING MINDMAP.
+  - After making the relevant changes, combine the "nodes" and "edges" arrays into a JSON object, formatted EXACTLY as shown below:
+{
+  nodes: [
+    { "id": "1", "position": { "x": 100, "y": 100 }, "data": { "label": "Machine Learning" } },
+    { "id": "2", "position": { "x": 300, "y": 100 }, "data": { "label": "Model Evaluation" } },
+    { "id": "3", "position": { "x": 500, "y": 100 }, "data": { "label": "Training Data" } }
+  ],
+  edges: [
+    { "id": "e1-2", "source": "1", "target": "2" },
+    { "id": "e1-3", "source": "1", "target": "3" },
+    { "id": "e2-4", "source": "2", "target": "4" }
+  ]
+}
+
+  The JSON should have two arrays, nodes and edges, where:
+  * Each node has id, position {x, y}, and data {label}.
+  * Each edge has id, source, and target.  
+  
+  Here is an example of a PERFECT response:
+  GIVEN: 
+  - topic: Machine Learning
+  - nodes: [
+    { "id": "1", "position": { "x": 100, "y": 100 }, "data": { "label": "Machine Learning" } },
+    { "id": "2", "position": { "x": 300, "y": 100 }, "data": { "label": "Model Evaluation" } },
+    { "id": "3", "position": { "x": 500, "y": 100 }, "data": { "label": "Training Data" } }
+  ]
+  - edges: [
+    { "id": "e1-2", "source": "1", "target": "2" },
+    { "id": "e1-3", "source": "1", "target": "3" }
+  ]
+  - need: Add a new subtopic "Overfitting" under the node "Model Evaluation"
+
+  PERFECT RESPONSE:
+  {
+  "nodes": [
+    { "id": "1", "position": { "x": 100, "y": 100 }, "data": { "label": "Machine Learning" } },
+    { "id": "2", "position": { "x": 300, "y": 100 }, "data": { "label": "Model Evaluation" } },
+    { "id": "3", "position": { "x": 500, "y": 100 }, "data": { "label": "Training Data" } },
+    { "id": "4", "position": { "x": 300, "y": 200 }, "data": { "label": "Overfitting" } }
+  ],
+  "edges": [
+    { "id": "e1-2", "source": "1", "target": "2" },
+    { "id": "e1-3", "source": "1", "target": "3" },
+    { "id": "e2-4", "source": "2", "target": "4" }
+  ]
+}
+
+`;
+
+    const completion = await openai.chat.completions.create({
+      model: "o3-mini",
+      messages: [
+          { role: "system", content: "You are a helpful assistant." },
+          {
+              role: "user",
+              content: prompt,
+          },
+      ],
+      response_format: {"type":"json_object"}
+  });
+
+  const jsonData = JSON.parse(completion.choices[0].message.content);
+  console.log(jsonData);
+  res.json(jsonData);
+
+});
+
 const port = 3002;
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
