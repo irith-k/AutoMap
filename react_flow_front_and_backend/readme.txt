@@ -14,18 +14,16 @@ The project is contained within the `SimpleReactFlowExample` folder, which inclu
 
 1. Install dependencies for both frontend and backend:
 
-    cd SimpleReactFlowExample
+    cd react_flow_front_and_backend
     npm install
 
 ## Running the app
 
-2. Load hermes-3-llama-3.2-3b in LM Studio and start the server, running on port 1234 
-
-3. Start the backend (API server) in mind-map-app directory by running:
+2. Start the backend (API server) in mind-map-app directory by running:
 
     node server.js
     
-4. Start the frontend (React app) in mind-map-app directory by running:
+3. Start the frontend (React app) in mind-map-app directory by running:
 
     npm run dev
 
