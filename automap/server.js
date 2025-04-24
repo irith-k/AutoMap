@@ -142,9 +142,9 @@ app.post('/update-mindmap', async (req, res) => {
   - After making the relevant changes, combine the "nodes" and "edges" arrays into a JSON object, formatted EXACTLY as shown below:
 {
   nodes: [
-    { "id": "1", "position": { "x": 100, "y": 100 }, "data": { "label": "Machine Learning" } },
-    { "id": "2", "position": { "x": 300, "y": 100 }, "data": { "label": "Model Evaluation" } },
-    { "id": "3", "position": { "x": 500, "y": 100 }, "data": { "label": "Training Data" } }
+    { "id": "1", "type": "mindMapNode", "position": { "x": 100, "y": 100 }, "data": { "label": "Machine Learning" } },
+    { "id": "2", "type": "mindMapNode", "position": { "x": 300, "y": 100 }, "data": { "label": "Model Evaluation" } },
+    { "id": "3", "type": "mindMapNode", "position": { "x": 500, "y": 100 }, "data": { "label": "Training Data" } }
   ],
   edges: [
     { "id": "e1-2", "source": "1", "target": "2" },
@@ -161,28 +161,28 @@ app.post('/update-mindmap', async (req, res) => {
   GIVEN: 
   - topic: Machine Learning
   - nodes: [
-    { "id": "1", "position": { "x": 100, "y": 100 }, "data": { "label": "Machine Learning" } },
-    { "id": "2", "position": { "x": 300, "y": 100 }, "data": { "label": "Model Evaluation" } },
-    { "id": "3", "position": { "x": 500, "y": 100 }, "data": { "label": "Training Data" } }
+    { id: '1', type: 'mindMapNode', position: { x: 100, y: 100 }, data: { label: "Machine Learning" } },
+    { id: '2', type: 'mindMapNode', position: { x: 300, y: 100 }, data: { label: "Model Evaluation" } },
+    { id: '3', type: 'mindMapNode', position: { x: 500, y: 100 }, data: { label: "Training Data" } }
   ]
   - edges: [
-    { "id": "e1-2", "source": "1", "target": "2" },
-    { "id": "e1-3", "source": "1", "target": "3" }
+    { id: 'e1-2', source: '1', target: '2' },
+    { id: 'e1-3', source: '1', target: '3' }
   ]
   - need: Add a new subtopic "Overfitting" under the node "Model Evaluation"
 
   PERFECT RESPONSE:
   {
   "nodes": [
-    { "id": "1", "position": { "x": 100, "y": 100 }, "data": { "label": "Machine Learning" } },
-    { "id": "2", "position": { "x": 300, "y": 100 }, "data": { "label": "Model Evaluation" } },
-    { "id": "3", "position": { "x": 500, "y": 100 }, "data": { "label": "Training Data" } },
-    { "id": "4", "position": { "x": 300, "y": 200 }, "data": { "label": "Overfitting" } }
+    { id: '1', type: 'mindMapNode', position: { x: 100, y: 100 }, data: { label: "Machine Learning" } },
+    { id: '2', type: 'mindMapNode', position: { x: 300, y: 100 }, data: { label: "Model Evaluation" } },
+    { id: '3', type: 'mindMapNode', position: { x: 500, y: 100 }, data: { label: "Training Data" } },
+    { id: '4', type: 'mindMapNode', position: { x: 300, y: 200 }, data: { label: "Overfitting" } },
   ],
   "edges": [
-    { "id": "e1-2", "source": "1", "target": "2" },
-    { "id": "e1-3", "source": "1", "target": "3" },
-    { "id": "e2-4", "source": "2", "target": "4" }
+    { id: 'e1-2', source: '1', target: '2' },
+    { id: 'e1-3', source: '1', target: '3' },
+    { id: 'e2-4', source: '2', target: '4' }
   ]
 }
 

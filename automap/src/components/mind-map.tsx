@@ -29,14 +29,26 @@ const nodeTypes = {
 let id = 1;
 const getId = () => `${id++}`;
 
-const initialNodes = [
-    { id: getId(), type: 'mindMapNode', position: { x: 0, y: 0 }, data: { label: 'Node 1' } },
-    { id: getId(), type: 'mindMapNode', position: { x: 0, y: 100 }, data: { label: 'Node 2' } },
-    { id: getId(), type: 'mindMapNode', position: { x: 0, y: 200 }, data: { label: 'Node 3' } },
+const initialNodes: any[] = [
+    // { id: getId(), type: 'mindMapNode', position: { x: 0, y: 0 }, data: { label: 'Node 1' } },
+    // { id: getId(), type: 'mindMapNode', position: { x: 0, y: 100 }, data: { label: 'Node 2' } },
+    // { id: getId(), type: 'mindMapNode', position: { x: 0, y: 200 }, data: { label: 'Node 3' } },
+    // { id: getId(), type: 'mindMapNode', position: { x: 0, y: 300 }, data: { label: 'Node 4' } },
+    // { id: getId(), type: 'mindMapNode', position: { x: 0, y: 400 }, data: { label: 'Node 5' } },
+    // { id: getId(), type: 'mindMapNode', position: { x: 0, y: 500 }, data: { label: 'Node 6' } },
+    // { id: getId(), type: 'mindMapNode', position: { x: 0, y: 600 }, data: { label: 'Node 7' } },
+    // { id: getId(), type: 'mindMapNode', position: { x: 0, y: 700 }, data: { label: 'Node 8' } },
+    // { id: getId(), type: 'mindMapNode', position: { x: 0, y: 800 }, data: { label: 'Node 9' } },
 ];
-const initialEdges = [
-    { id: 'e1-2', source: '1', target: '2' },
-    { id: 'e2-3', source: '2', target: '3' },
+const initialEdges: any[] = [
+    // { id: 'e1-2', source: '1', target: '2' },
+    // { id: 'e2-3', source: '2', target: '3' },
+    // { id: 'e1-4', source: '1', target: '4' },
+    // { id: 'e1-5', source: '1', target: '5' },
+    // { id: 'e4-6', source: '4', target: '6' },
+    // { id: 'e4-7', source: '4', target: '7' },
+    // { id: 'e2-8', source: '2', target: '8' },
+    // { id: 'e5-9', source: '5', target: '9' },
 ];
 
 const defaultEdgeOptions = {
@@ -47,7 +59,7 @@ const defaultEdgeOptions = {
 const MindMap = () => {
     const [nodes, setNodes] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-    const { screenToFlowPosition } = useReactFlow();
+    const { screenToFlowPosition } = useReactFlow();    
 
     const onConnect = useCallback(
         (params: any) => {
@@ -127,6 +139,7 @@ const MindMap = () => {
             >
                 <MiniMap position="bottom-left" />
                 <Background color='#ccc' variant={BackgroundVariant.Dots} gap={12} size={1} />
+                
             </ReactFlow>
         </div>
     );

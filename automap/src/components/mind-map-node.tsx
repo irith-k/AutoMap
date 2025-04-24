@@ -29,8 +29,14 @@ const MindMapNode: React.FC<MindMapNodeProps> = ({ id, data, selected }) => {
     }
   };
 
+  const rootId = '1';
+  const isRoot: boolean = (id == rootId);
+
   return (
-    <div className={`bg-white border relative transition-all ${selected ? "border-black" : "border-gray-300 hover:border-gray-400"} shadow-none rounded-md text-center`} onDoubleClick={handleDoubleClick}>
+    <div 
+          className={`bg-white border relative transition-all ${selected ? "border-black" : "border-gray-300 hover:border-gray-400"} shadow-none rounded-md text-center font-weight ${isRoot ? "font-bold" : "font-normal"}`} 
+          onDoubleClick={handleDoubleClick}
+    >
       <div
         className={`flex relative pr-3 py-2 h-10 text-center`}
       >
