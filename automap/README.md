@@ -14,11 +14,23 @@ pnpm dev
 bun dev
 ```
 
+Next, open a new terminal and type in the following to start the backend server:
+
+```bash
+node server.js
+```
+
+Finally, you must create a new .env file in the root of the project directory and add the following:
+
+```bash
+OPENAI_API_KEY=your_openai_api_key
+OPENAI_ORG_ID=your_openai_org_id
+OPENAI_PROJECT_ID=your_openai_project_id
+```
+
+Please replace the above credentials with that of your own OpenAI API key.
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More
 
