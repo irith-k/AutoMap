@@ -6,7 +6,7 @@ import ClearButton from './clear-button';
 import ZoomOutButton from './zoom-out-button';
 import ZoomInButton from './zoom-in-button';
 import AddNodeButton from './add-node-button';
-import HelpButton from './ui/help-button';
+import HelpButton from './help-button';
 
 const Header = () => {
     return (
