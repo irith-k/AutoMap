@@ -1,4 +1,4 @@
-# Max's Guide to Deploying Your Next.js Application to Vercel
+# Our Guide to Deploying Your Next.js Application to Vercel
 
 Link to our Deployment: https://automap-pqeee05g8-maxholschs-projects.vercel.app
 
